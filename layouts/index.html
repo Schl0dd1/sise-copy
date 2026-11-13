@@ -31,22 +31,7 @@
     <header class="site-header">
       <a class="logo" href="{{ .Site.Home.RelPermalink }}">SI<span>SE</span></a>
       <nav class="site-nav" aria-label="Hauptnavigation">
-        <ul class="site-menu">
-          {{- range .Site.Menus.main }}
-            {{- if .HasChildren }}
-              <li class="dropdown-parent">
-                <button class="dropdown-toggle" type="button" aria-haspopup="true">{{ .Name }}</button>
-                <ul class="dropdown-menu">
-                  {{- range .Children }}
-                    <li><a href="{{ .URL | relURL }}">{{ .Name }}</a></li>
-                  {{- end }}
-                </ul>
-              </li>
-            {{- else }}
-              <li><a href="{{ .URL | relURL }}">{{ .Name }}</a></li>
-            {{- end }}
-          {{- end }}
-        </ul>
+        {{ partial "main-menu.html" . }}
       </nav>
     </header>
 

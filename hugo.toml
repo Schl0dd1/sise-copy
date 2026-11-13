@@ -5,7 +5,7 @@ title = "Sichtbar & Selbstbestimmt"
 theme = "ananke"
 
 [permalinks]
-  pages = "/:slug/"
+  pages = "/:contentbasename/"
   projects = "/:slug/"
   podcasts = "/podcasts/:slug/"
 
@@ -17,61 +17,58 @@ theme = "ananke"
   mainSections = ["posts"]
 
 [menu]
-
-  # [[menu.main]]
-  #   name = "Aktuelles"
-  #   url = "/"
-  #   weight = 1
+  # Gewichte in Zehnerschritten, damit im CMS angelegte Seiten
+  # (Feld "Position im Menü") dazwischen einsortiert werden können.
 
   [[menu.main]]
     name = "Wer wir sind"
     url = "/"
-    weight = 1
+    weight = 10
 
-    [[menu.main]]
-    # name = "Inhalte & Beiträge"
+  [[menu.main]]
     name = "Aktuelles"
     url = "/posts/"
-    weight = 2
+    weight = 20
 
   [[menu.main]]
     name = "Was wir machen"
-    weight = 3
+    identifier = "was-wir-machen"
+    weight = 30
     [menu.main.params]
       hasChildren = true
 
   [[menu.main]]
     name = "Podcasts"
     url = "/podcasts/"
-    parent = "Was wir machen"
-    weight = 1
+    parent = "was-wir-machen"
+    weight = 10
 
   [[menu.main]]
     name = "Workshops"
     url = "/workshops/"
-    parent = "Was wir machen"
-    weight = 2
+    parent = "was-wir-machen"
+    weight = 20
 
   [[menu.main]]
     name = "Vorträge"
     url = "/vortraege/"
-    parent = "Was wir machen"
-    weight = 3
+    parent = "was-wir-machen"
+    weight = 30
 
   [[menu.main]]
     name = "Links"
     url = "/links/"
-    weight = 4
+    weight = 40
 
   [[menu.main]]
     name = "Galerie"
     url = "/gallery/"
-    weight = 5
-    
+    weight = 50
+
   [[menu.main]]
     name = "Kontakt"
     url = "/kontakt/"
-    weight = 6
+    weight = 60
 
 [build]
   [build.buildStats]

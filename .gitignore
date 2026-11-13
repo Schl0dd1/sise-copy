@@ -1,0 +1,12 @@
+# Hugo Build-Ausgabe (Netlify baut die Seite beim Deploy selbst)
+/public/
+/resources/_gen/
+.hugo_build.lock
+hugo_stats.json
+
+# npm
+node_modules/
+
+# Editor / System
+.DS_Store
+*.swp

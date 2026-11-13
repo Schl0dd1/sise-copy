@@ -4,6 +4,10 @@ backend:
 
 local_backend: true
 
+slug:
+  encoding: "ascii"
+  clean_accents: true
+
 media_folder: "static/images"
 public_folder: "/images"
 
@@ -19,18 +23,6 @@ collections:
           - { label: "Title", name: "title", widget: "string" }
           - { label: "Description", name: "description", widget: "string" }
           - { label: "Body", name: "body", widget: "markdown" }
-      - label: "Kontakt"
-        name: "kontakt"
-        file: "content/pages/kontakt.md"
-        fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Body", name: "body", widget: "markdown" }
-      - label: "Links"
-        name: "links"
-        file: "content/pages/links.md"
-        fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Body", name: "body", widget: "markdown" }
       - label: "Workshops"
         name: "workshops"
         file: "content/projects/workshops.md"
@@ -43,6 +35,46 @@ collections:
         fields:
           - { label: "Title", name: "title", widget: "string" }
           - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "seiten"
+    label: "Seiten"
+    label_singular: "Seite"
+    description: "Eigene Seiten, z. B. Kontakt oder Links. Jede Seite ist unter /<url-name>/ erreichbar."
+    folder: "content/pages"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {
+          label: "Titel",
+          name: "title",
+          widget: "string",
+          hint: "Beim ersten Speichern wird daraus die Adresse der Seite (z. B. „Über uns“ → /uber-uns/). Sie bleibt danach gleich, auch wenn der Titel geändert wird.",
+        }
+      - { label: "Datum", name: "date", widget: "datetime" }
+      - label: "Im Menü anzeigen"
+        name: "menu_bereich"
+        widget: "select"
+        default: "keins"
+        options:
+          - { label: "Nicht im Menü", value: "keins" }
+          - { label: "Im Hauptmenü", value: "hauptmenue" }
+          - { label: "Unter „Was wir machen“", value: "was-wir-machen" }
+      - label: "Menütext"
+        name: "menu_name"
+        widget: "string"
+        required: false
+        hint: "Optional, falls im Menü ein kürzerer Text als der Titel stehen soll."
+      - label: "Position im Menü"
+        name: "menu_position"
+        widget: "number"
+        value_type: "int"
+        required: false
+        hint: >-
+          Kleinere Zahl = weiter vorne. Leer = ganz am Ende.
+          Hauptmenü: Wer wir sind 10 · Aktuelles 20 · Was wir machen 30 · Links 40 · Galerie 50 · Kontakt 60
+          (z. B. 55 = zwischen Galerie und Kontakt).
+          Unter „Was wir machen“: Podcasts 10 · Workshops 20 · Vorträge 30.
+      - { label: "Text", name: "body", widget: "markdown" }
 
   - name: "posts"
     label: "Posts"

@@ -1,0 +1,52 @@
+{{- /*
+  Hauptmenü: Einträge aus hugo.toml plus Seiten aus dem CMS (content/pages),
+  bei denen "Im Menü anzeigen" gesetzt ist.
+  Front-Matter der Seiten:
+    menu_bereich:  "keins" | "hauptmenue" | "was-wir-machen"
+    menu_position: Zahl, sortiert gemeinsam mit den Gewichten aus hugo.toml
+    menu_name:     optionaler Menütext (sonst Titel)
+*/ -}}
+{{- $extraMain := slice }}
+{{- $extraSub := slice }}
+{{- range where site.RegularPages "Section" "pages" }}
+  {{- $entry := dict
+    "name" (.Params.menu_name | default .Title)
+    "url" .RelPermalink
+    "weight" (.Params.menu_position | default 99)
+  }}
+  {{- if eq .Params.menu_bereich "hauptmenue" }}
+    {{- $extraMain = $extraMain | append $entry }}
+  {{- else if eq .Params.menu_bereich "was-wir-machen" }}
+    {{- $extraSub = $extraSub | append $entry }}
+  {{- end }}
+{{- end }}
+
+{{- $items := slice }}
+{{- range site.Menus.main }}
+  {{- $children := slice }}
+  {{- range .Children }}
+    {{- $children = $children | append (dict "name" .Name "url" (.URL | relURL) "weight" .Weight) }}
+  {{- end }}
+  {{- if eq .Identifier "was-wir-machen" }}
+    {{- $children = $children | append $extraSub }}
+  {{- end }}
+  {{- $items = $items | append (dict "name" .Name "url" (.URL | relURL) "weight" .Weight "children" $children) }}
+{{- end }}
+{{- $items = $items | append $extraMain }}
+
+<ul class="site-menu">
+  {{- range sort $items "weight" }}
+    {{- if .children }}
+      <li class="dropdown-parent">
+        <button class="dropdown-toggle" type="button" aria-haspopup="true">{{ .name }}</button>
+        <ul class="dropdown-menu">
+          {{- range sort .children "weight" }}
+            <li><a href="{{ .url }}">{{ .name }}</a></li>
+          {{- end }}
+        </ul>
+      </li>
+    {{- else }}
+      <li><a href="{{ .url }}">{{ .name }}</a></li>
+    {{- end }}
+  {{- end }}
+</ul>
