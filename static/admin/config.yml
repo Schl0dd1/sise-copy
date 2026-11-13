@@ -13,10 +13,10 @@ public_folder: "/images"
 
 collections:
   - name: "pages"
-    label: "Pages"
+    label: "Statische Seiten"
     format: frontmatter
     files:
-      - label: "Wer wir sind (Homepage)"
+      - label: "Startseite"
         name: "homepage"
         file: "content/_index.md"
         fields:
@@ -37,7 +37,7 @@ collections:
           - { label: "Body", name: "body", widget: "markdown" }
 
   - name: "seiten"
-    label: "Seiten"
+    label: "Weitere Seiten"
     label_singular: "Seite"
     description: "Eigene Seiten, z. B. Kontakt oder Links. Jede Seite ist unter /<url-name>/ erreichbar."
     folder: "content/pages"
@@ -71,7 +71,7 @@ collections:
         required: false
         hint: >-
           Kleinere Zahl = weiter vorne. Leer = ganz am Ende.
-          Hauptmenü: Wer wir sind 10 · Aktuelles 20 · Was wir machen 30 · Links 40 · Galerie 50 · Kontakt 60
+          Hauptmenü: Startseite 10 · Aktuelles 20 · Was wir machen 30 · Links 40 · Galerie 50 · Kontakt 60
           (z. B. 55 = zwischen Galerie und Kontakt).
           Unter „Was wir machen“: Podcasts 10 · Workshops 20 · Vorträge 30.
       - { label: "Text", name: "body", widget: "markdown" }

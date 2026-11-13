@@ -21,7 +21,7 @@ theme = "ananke"
   # (Feld "Position im Menü") dazwischen einsortiert werden können.
 
   [[menu.main]]
-    name = "Wer wir sind"
+    name = "Startseite"
     url = "/"
     weight = 10
 
