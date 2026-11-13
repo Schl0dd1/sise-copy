@@ -1,0 +1,4 @@
+# Hilfsdatei nur für die PHP-Skripte, nicht direkt aufrufbar
+<Files "config-laden.php">
+  Require all denied
+</Files>

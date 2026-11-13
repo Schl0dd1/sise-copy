@@ -5,9 +5,15 @@
 # dass jede Sammlung nur ihre eigenen Einträge zeigt.
 
 backend:
-  name: git-gateway
+  name: github
+  # GitHub-Repository, in das das CMS speichert (Besitzer/Name) – ggf. anpassen
+  repo: ShaQay3Q/sichtbar-und-selbstbestimmt
   branch: main
+  # Login über die PHP-Skripte in static/admin/oauth/ (GitHub-OAuth-App, siehe DEPLOYMENT.md)
+  base_url: https://sichtbarundselbstbestimmt.org
+  auth_endpoint: admin/oauth/auth.php
 
+# Lokal arbeiten ohne Login: „npx decap-server“ starten und /admin/ über hugo server öffnen
 local_backend: true
 
 slug:

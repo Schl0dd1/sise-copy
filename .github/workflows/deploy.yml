@@ -1,0 +1,77 @@
+# Baut die Website mit Hugo + Tailwind und lädt sie per rsync/SSH auf den Hetzner-Webspace.
+#
+# Läuft:
+#   - bei jedem Push auf main (auch Änderungen aus dem Decap CMS)
+#   - jede Nacht, damit vergangene Veranstaltungen automatisch verschwinden
+#   - manuell über „Actions → Deploy → Run workflow“
+#
+# Benötigte Repository-Secrets (Settings → Secrets and variables → Actions):
+#   HETZNER_SSH_HOST         z. B. www123.your-server.de
+#   HETZNER_SSH_PORT         bei Hetzner-Webhosting meist 222
+#   HETZNER_SSH_USER         Benutzername des Webhosting-Kontos
+#   HETZNER_SSH_KEY          privater SSH-Schlüssel (nur für dieses Deployment erzeugen)
+#   HETZNER_SSH_KNOWN_HOSTS  Ausgabe von: ssh-keyscan -p 222 www123.your-server.de
+#   HETZNER_TARGET_DIR       Zielordner auf dem Server, z. B. public_html/
+# Details: DEPLOYMENT.md
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "15 3 * * *" # täglich 03:15 UTC
+  workflow_dispatch:
+
+# Nie zwei Deployments gleichzeitig
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: 0.154.5
+      HUGO_ENVIRONMENT: production
+      TZ: Europe/Berlin
+    steps:
+      - name: Repository auschecken (inkl. Theme-Submodul)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: npm-Pakete installieren (Tailwind)
+        run: npm ci
+
+      - name: Hugo installieren
+        run: |
+          wget -q -O hugo.deb "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+          sudo dpkg -i hugo.deb
+          hugo version
+
+      - name: Website bauen
+        run: hugo --gc --minify
+
+      - name: SSH einrichten
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "${{ secrets.HETZNER_SSH_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          echo "${{ secrets.HETZNER_SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: Auf Hetzner hochladen
+        # --delete entfernt Dateien, die es in der neuen Version nicht mehr gibt.
+        # Deshalb muss HETZNER_TARGET_DIR ein Ordner nur für diese Website sein.
+        # .well-known (z. B. für SSL-Zertifikate) bleibt unangetastet.
+        run: |
+          rsync -az --delete --exclude ".well-known/" \
+            -e "ssh -i ~/.ssh/id_deploy -p ${{ secrets.HETZNER_SSH_PORT }}" \
+            public/ \
+            "${{ secrets.HETZNER_SSH_USER }}@${{ secrets.HETZNER_SSH_HOST }}:${{ secrets.HETZNER_TARGET_DIR }}"
