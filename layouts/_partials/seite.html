@@ -1,0 +1,12 @@
+{{- /* Normale Inhaltsseite: Kopf, optionales Bild, Text, Unterseiten-Kacheln (falls vorhanden). */ -}}
+<div class="px-4 pt-8 pb-4 sm:px-8 lg:px-16 lg:pt-12">
+  <article class="mx-auto max-w-[880px]">
+    {{ partial "page-header.html" . }}
+    {{- with .Params.bild }}
+    <img src="{{ . | relURL }}" alt="" class="mb-12 aspect-[16/9] w-full rounded-card object-cover">
+    {{- end }}
+    <div class="prose-sise prose max-w-none">
+      {{ .Content }}
+    </div>
+  </article>
+</div>

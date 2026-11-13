@@ -1,0 +1,8 @@
+{{- /* Zeile „Workshop · 18:00 Uhr · Connewitz · barrierearm“. Aufruf mit dict "page" und "zeit". */ -}}
+{{- $p := .page }}
+{{- $teile := slice }}
+{{- with $p.Params.kategorie }}{{ $teile = $teile | append . }}{{ end }}
+{{- $teile = $teile | append (printf "%s Uhr" (.zeit.Format "15:04")) }}
+{{- with $p.Params.ort }}{{ $teile = $teile | append . }}{{ end }}
+{{- with $p.Params.hinweis }}{{ $teile = $teile | append . }}{{ end }}
+{{- return (delimit $teile " · ") }}

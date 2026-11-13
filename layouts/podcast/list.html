@@ -1,0 +1,16 @@
+{{ define "main" }}
+<div class="px-4 pt-8 pb-4 sm:px-8 lg:px-16 lg:pt-12">
+  {{ partial "page-header.html" . }}
+
+  {{- with .Content }}
+  <div class="prose-sise prose mb-12 max-w-[880px]">{{ . }}</div>
+  {{- end }}
+
+  {{- /* Alle Angaben kommen aus den einzelnen Folgen (CMS: „Podcast-Folgen“) */}}
+  <div class="flex flex-col gap-8">
+    {{- range .RegularPages.ByDate.Reverse }}
+    {{ partial "podcast-folge.html" (dict "page" . "ebene" "h2") }}
+    {{- end }}
+  </div>
+</div>
+{{ end }}

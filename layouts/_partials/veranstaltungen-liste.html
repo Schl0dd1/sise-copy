@@ -1,0 +1,24 @@
+{{- /*
+  Liste kommender Veranstaltungen im Stil von Design 4a.
+  Aufruf: {{ partial "veranstaltungen-liste.html" (dict "limit" 3) }}  (limit 0 = alle)
+*/ -}}
+{{- $liste := partial "veranstaltungen-kommend.html" (dict "limit" (.limit | default 0)) }}
+{{- if $liste }}
+<ul class="m-0 list-none border-b-[3px] border-plum p-0">
+  {{- range $i, $t := $liste }}
+  {{- $teal := eq (mod $i 2) 1 }}
+  <li>
+    <a href="{{ $t.page.RelPermalink }}" class="group grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-6 gap-y-2 border-t-[3px] border-plum py-6 text-plum no-underline lg:grid-cols-[240px_minmax(0,1fr)_auto] lg:gap-8">
+      <time datetime="{{ $t.zeit.Format "2006-01-02T15:04:05-07:00" }}" class="col-span-2 text-h1 font-black lg:col-span-1 xl:text-display {{ if $teal }}text-teal{{ end }}">{{ $t.zeit.Format "02.01." }}</time>
+      <span class="flex flex-col gap-1.5">
+        <strong class="text-h4 lg:text-h3">{{ $t.page.Title }}</strong>
+        <span class="text-body text-plum-ink">{{ partial "veranstaltung-meta.html" $t }}</span>
+      </span>
+      <span class="flex size-14 items-center justify-center rounded-full text-h4 text-white transition-transform group-hover:translate-x-1 lg:size-16 {{ if $teal }}bg-teal{{ else }}bg-plum{{ end }}" aria-hidden="true">→</span>
+    </a>
+  </li>
+  {{- end }}
+</ul>
+{{- else }}
+<p class="m-0 border-y-[3px] border-plum py-6 text-lead text-plum">Gerade sind keine Veranstaltungen geplant. Schau bald wieder vorbei!</p>
+{{- end }}

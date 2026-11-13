@@ -1,0 +1,10 @@
+{{ define "main" }}
+<div class="px-4 pt-8 pb-4 sm:px-8 lg:px-16 lg:pt-12">
+  <div class="flex max-w-[880px] flex-col gap-8">
+    <span class="self-start rounded-full bg-lilac px-4 py-2 text-small font-bold text-plum">Fehler 404</span>
+    <h1 class="heading-display m-0">Diese Seite gibt es <span class="font-slab font-normal text-teal">nicht.</span></h1>
+    <p class="m-0 max-w-[560px] text-lead">Vielleicht wurde sie verschoben. Über das Menü oben findest du alle Bereiche.</p>
+    <a href="{{ site.Home.RelPermalink }}" class="inline-flex items-center gap-2.5 self-start rounded-full bg-plum px-[30px] py-[17px] text-body font-bold text-white no-underline hover:bg-teal">Zur Startseite <span aria-hidden="true">→</span></a>
+  </div>
+</div>
+{{ end }}

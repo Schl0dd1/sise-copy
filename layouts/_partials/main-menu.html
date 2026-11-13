@@ -1,52 +1,59 @@
 {{- /*
-  Hauptmenü: Einträge aus hugo.toml plus „Weitere Seiten“ aus dem CMS (content/pages, typ: weitere),
-  bei denen "Im Menü anzeigen" gesetzt ist.
-  Front-Matter der Seiten:
-    menu_bereich:  "keins" | "hauptmenue" | "was-wir-machen"
-    menu_position: Zahl, sortiert gemeinsam mit den Gewichten aus hugo.toml
-    menu_name:     optionaler Menütext (sonst Titel)
+  Hauptmenü.
+  - Hauptpunkte aus hugo.toml ([[menu.main]], identifier = Ordner in content/)
+  - Dropdown: Unterseiten des Bereichs (partial unterseiten.html)
+  - plus „Weitere Seiten“ aus dem CMS (content/pages, typ: weitere) mit
+    menu_bereich = "hauptmenue" oder = identifier eines Bereichs
+  Aufruf mit der aktuellen Seite als Kontext (für aria-current).
 */ -}}
+{{- $aktuell := .RelPermalink }}
+
+{{- /* Weitere Seiten einsammeln */}}
 {{- $extraMain := slice }}
-{{- $extraSub := slice }}
+{{- $extraSub := dict }}
 {{- range where (where site.RegularPages "Section" "pages") "Params.typ" "weitere" }}
+  {{- $bereich := .Params.menu_bereich | default "keins" }}
   {{- $entry := dict
     "name" (.Params.menu_name | default .Title)
     "url" .RelPermalink
-    "weight" (.Params.menu_position | default 99)
+    "weight" (.Params.menu_position | default 9999)
   }}
-  {{- if eq .Params.menu_bereich "hauptmenue" }}
+  {{- if eq $bereich "hauptmenue" }}
     {{- $extraMain = $extraMain | append $entry }}
-  {{- else if eq .Params.menu_bereich "was-wir-machen" }}
-    {{- $extraSub = $extraSub | append $entry }}
+  {{- else if ne $bereich "keins" }}
+    {{- $liste := (index $extraSub $bereich) | default slice }}
+    {{- $extraSub = merge $extraSub (dict $bereich ($liste | append $entry)) }}
   {{- end }}
 {{- end }}
 
+{{- /* Hauptpunkte mit Unterseiten */}}
 {{- $items := slice }}
 {{- range site.Menus.main }}
   {{- $children := slice }}
-  {{- range .Children }}
-    {{- $children = $children | append (dict "name" .Name "url" (.URL | relURL) "weight" .Weight) }}
+  {{- with site.GetPage (printf "/%s" .Identifier) }}
+    {{- range partial "unterseiten.html" . }}
+      {{- $children = $children | append (dict "name" .LinkTitle "url" .RelPermalink "weight" (cond (gt .Weight 0) .Weight 9999)) }}
+    {{- end }}
   {{- end }}
-  {{- if eq .Identifier "was-wir-machen" }}
-    {{- $children = $children | append $extraSub }}
+  {{- with index $extraSub .Identifier }}
+    {{- $children = $children | append . }}
   {{- end }}
-  {{- $items = $items | append (dict "name" .Name "url" (.URL | relURL) "weight" .Weight "children" $children) }}
+  {{- $items = $items | append (dict "name" .Name "url" (.URL | relURL) "weight" .Weight "children" (sort $children "weight")) }}
 {{- end }}
 {{- $items = $items | append $extraMain }}
 
 <ul class="site-menu">
   {{- range sort $items "weight" }}
-    {{- if .children }}
-      <li class="dropdown-parent">
-        <button class="dropdown-toggle" type="button" aria-haspopup="true">{{ .name }}</button>
-        <ul class="dropdown-menu">
-          {{- range sort .children "weight" }}
-            <li><a href="{{ .url }}">{{ .name }}</a></li>
-          {{- end }}
-        </ul>
-      </li>
-    {{- else }}
-      <li><a href="{{ .url }}">{{ .name }}</a></li>
-    {{- end }}
+    {{- $istAktuell := or (eq .url $aktuell) (and (ne .url "/") (strings.HasPrefix $aktuell .url)) }}
+    <li{{ with .children }} class="dropdown-parent"{{ end }}>
+      <a class="menu-link" href="{{ .url }}"{{ if eq .url $aktuell }} aria-current="page"{{ else if $istAktuell }} data-active{{ end }}>{{ .name }}</a>
+      {{- with .children }}
+      <ul class="dropdown-menu">
+        {{- range . }}
+        <li><a href="{{ .url }}"{{ if eq .url $aktuell }} aria-current="page"{{ end }}>{{ .name }}</a></li>
+        {{- end }}
+      </ul>
+      {{- end }}
+    </li>
   {{- end }}
 </ul>

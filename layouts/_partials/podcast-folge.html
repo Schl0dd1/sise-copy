@@ -1,0 +1,35 @@
+{{- /*
+  Listenelement einer Podcast-Folge (Podcast-Seite und Startseite).
+  Aufruf: {{ partial "podcast-folge.html" (dict "page" $folge "ebene" "h2" "neu" false) }}
+  ebene: Überschriftenebene des Titels (h2 auf der Podcast-Seite, h3 auf der Startseite)
+  neu:   zeigt das Etikett „Neue Folge“
+*/ -}}
+{{- $p := .page }}
+{{- $ebene := .ebene | default "h2" }}
+{{- $id := printf "folge-%s" $p.File.ContentBaseName }}
+<article class="grid gap-6 rounded-card bg-white p-6 text-plum-ink sm:grid-cols-[200px_minmax(0,1fr)] sm:gap-8 sm:p-8 lg:grid-cols-[240px_minmax(0,1fr)]" aria-labelledby="{{ $id }}">
+  {{- with $p.Params.cover }}
+  <img class="aspect-square w-full max-w-[280px] rounded-media object-cover" src="{{ . | relURL }}" alt="" loading="lazy">
+  {{- else }}
+  <div class="grain grain-dark relative aspect-square w-full max-w-[280px] rounded-t-[140px] rounded-b-media bg-[linear-gradient(160deg,#491550,#077478)]" aria-hidden="true"></div>
+  {{- end }}
+
+  <div class="flex min-w-0 flex-col gap-3">
+    {{- if .neu }}
+    <span class="self-start rounded-full bg-mint px-3 py-1.5 text-small font-bold text-plum">Neue Folge</span>
+    {{- end }}
+    {{ printf "<%s id=%q class=%q>" $ebene $id "m-0 font-slab text-h3 font-normal tracking-normal text-plum" | safeHTML }}{{ $p.Title }}{{ printf "</%s>" $ebene | safeHTML }}
+    {{- with $p.Params.duration }}
+    <p class="m-0 text-small text-mute">Dauer: {{ . }}</p>
+    {{- end }}
+    {{- with $p.Params.audio }}
+    <audio class="my-2 w-full" controls preload="none" src="{{ . }}">
+      <a href="{{ . }}">Folge herunterladen</a>
+    </audio>
+    {{- end }}
+    <p class="m-0 text-body">
+      {{- with $p.Params.teaser }}{{ . }}{{ else }}{{ $p.Summary | plainify | truncate 240 }}{{ end -}}
+    </p>
+    <a class="mt-2 inline-flex items-center gap-2.5 self-start rounded-full bg-plum px-6 py-3 text-body font-bold text-white no-underline hover:bg-teal focus-visible:bg-teal" href="{{ $p.RelPermalink }}">Mehr zur Folge <span aria-hidden="true">→</span></a>
+  </div>
+</article>

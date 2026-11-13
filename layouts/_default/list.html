@@ -1,14 +1,9 @@
 {{ define "main" }}
-<div class="page-shell">
-  <header class="page-header">
-    <h1 class="heading-1">{{ .Title }}</h1>
-  </header>
-  <ul class="page-list">
-  {{ range .Pages }}
-    <li class="page-list-item">
-      <a class="page-list-link heading-3" href="{{ .RelPermalink }}">{{ .Title }}</a>
-    </li>
-  {{ end }}
-  </ul>
+<div class="px-4 pt-8 pb-4 sm:px-8 lg:px-16 lg:pt-12">
+  {{ partial "page-header.html" . }}
+  {{- with .Content }}
+  <div class="prose-sise prose mb-12 max-w-[880px]">{{ . }}</div>
+  {{- end }}
+  {{ partial "kacheln.html" (dict "seiten" .Pages) }}
 </div>
 {{ end }}

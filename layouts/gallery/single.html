@@ -1,0 +1,9 @@
+{{ define "main" }}
+<div class="px-4 pt-8 pb-4 sm:px-8 lg:px-16 lg:pt-12">
+  {{ partial "page-header.html" . }}
+  {{- with .Content }}
+  <div class="prose-sise prose mb-10 max-w-[880px]">{{ . }}</div>
+  {{- end }}
+  {{ partial "galerie-bilder.html" .Params.photos }}
+</div>
+{{ end }}

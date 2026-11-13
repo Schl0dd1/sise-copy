@@ -1,0 +1,22 @@
+{{- /*
+  Unterseiten eines Bereichs (z. B. /was-wir-machen/), sortiert nach „Reihenfolge“ (weight).
+  Dazu zählen: Seiten mit typ: unterseite (CMS „Unterseiten: …“) und Unterbereiche
+  wie Podcast oder Galerie. Veranstaltungen, Podcast-Folgen usw. gehören nicht dazu.
+  Aufruf: {{ $kinder := partial "unterseiten.html" $bereichsseite }}
+*/ -}}
+{{- $kinder := slice }}
+{{- range .Pages }}
+  {{- if or .IsSection (eq .Params.typ "unterseite") }}
+    {{- $kinder = $kinder | append . }}
+  {{- end }}
+{{- end }}
+{{- /* Ohne Reihenfolge ans Ende, dann alphabetisch */ -}}
+{{- $sortiert := slice }}
+{{- range sort $kinder "Title" }}
+  {{- $sortiert = $sortiert | append (dict "page" . "weight" (cond (gt .Weight 0) .Weight 9999)) }}
+{{- end }}
+{{- $ergebnis := slice }}
+{{- range sort $sortiert "weight" }}
+  {{- $ergebnis = $ergebnis | append .page }}
+{{- end }}
+{{- return $ergebnis }}

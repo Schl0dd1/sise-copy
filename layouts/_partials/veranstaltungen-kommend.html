@@ -1,0 +1,28 @@
+{{- /*
+  Liefert die kommenden Veranstaltungen (content/veranstaltungen, typ: veranstaltung), aufsteigend sortiert.
+  Aufruf: {{ $liste := partial "veranstaltungen-kommend.html" (dict "limit" 3) }}
+  Jeder Eintrag: dict mit "page", "zeit" (time.Time) und "unix".
+
+  „Kommend“ bezieht sich auf den Zeitpunkt des Builds – vergangene Veranstaltungen
+  verschwinden erst beim nächsten Build (z. B. nach jeder CMS-Änderung).
+  Eine Veranstaltung gilt bis Mitternacht des Veranstaltungstags als kommend.
+*/ -}}
+{{- $limit := .limit | default 0 }}
+{{- /* Zeitzone aus hugo.toml (timeZone): Zeitangaben ohne Offset werden darin gelesen */}}
+{{- $zone := (time.AsTime "2000-01-01T00:00:00").Location }}
+{{- $heute := (now.In $zone).Format "2006-01-02" | time.AsTime }}
+{{- $liste := slice }}
+{{- range where (where site.RegularPages "Section" "veranstaltungen") "Params.typ" "veranstaltung" }}
+  {{- $page := . }}
+  {{- with .Params.termin }}
+    {{- $zeit := (time.AsTime .).In $zone }}
+    {{- if ge $zeit.Unix $heute.Unix }}
+      {{- $liste = $liste | append (dict "page" $page "zeit" $zeit "unix" $zeit.Unix) }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- $liste = sort $liste "unix" }}
+{{- if gt $limit 0 }}
+  {{- $liste = first $limit $liste }}
+{{- end }}
+{{- return $liste }}

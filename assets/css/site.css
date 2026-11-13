@@ -1,0 +1,181 @@
+/* Seitenweite Regeln, die nicht direkt als Tailwind-Klassen im HTML stehen können:
+   - Menü (HTML kommt aus _partials/main-menu.html)
+   - Fließtext aus dem CMS (Markdown → .prose-sise, Tailwind Typography) */
+
+/* ---------- Wiederverwendbare Text-Kombinationen ----------
+   Größen kommen aus der Skala in main.css (@theme). */
+
+/* Große Überschrift: Hero, Seitentitel, „Veranstaltungen“ auf der Startseite.
+   Stufen so gewählt, dass „& Selbstbestimmt“ in der Hero-Spalte nie umbricht. */
+@utility heading-display {
+  @apply text-h2 font-black text-balance text-plum sm:text-h1 xl:text-display;
+}
+
+/* Abschnittsüberschrift innerhalb einer Seite */
+@utility heading-section {
+  @apply text-h3 font-black text-plum lg:text-h2;
+}
+
+/* Etikett in Großbuchstaben über Abschnitten */
+@utility eyebrow {
+  @apply text-label font-bold text-teal-dark uppercase;
+}
+
+/* Hintergrund des Podcast-Abschnitts: weiche Farbflecken statt glattem Verlauf.
+   Oben links bewusst heller, damit die lila Schrift gut lesbar bleibt. */
+@utility bg-podcast {
+  background:
+    radial-gradient(ellipse 60% 70% at 92% 8%, rgb(159 214 207 / 0.55), transparent 70%),
+    radial-gradient(ellipse 55% 60% at 80% 100%, rgb(73 21 80 / 0.45), transparent 70%),
+    radial-gradient(ellipse 45% 50% at 35% 85%, rgb(141 94 160 / 0.5), transparent 70%),
+    linear-gradient(125deg, #c4a9d2 0%, #ab88bd 45%, #8f68a3 100%);
+}
+
+/* Körnung und Struktur über einer Fläche (z. B. bg-podcast), liegt unter dem Inhalt.
+   ::before = feine, kräftige Körnung · ::after = großflächige Wolken-Struktur
+   Direkt auf das Element mit der Hintergrundfarbe setzen (sonst wirkt es grau)
+   und mit „relative“ oder „absolute“ kombinieren. */
+@utility grain {
+  isolation: isolate;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  &::before {
+    opacity: var(--grain-opacity, 0.9);
+    mix-blend-mode: var(--grain-blend, overlay);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  &::after {
+    opacity: var(--grain-cloud-opacity, 0.4);
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E");
+    background-size: 900px 900px;
+  }
+}
+
+/* Körnung für dunkle Flächen (Lila/Türkis): gleich grob, aber ohne die Farbe auszuwaschen.
+   Zusätzlich zu „grain“ verwenden: class="grain grain-dark" */
+@utility grain-dark {
+  --grain-opacity: 0.75;
+  --grain-blend: soft-light;
+  --grain-cloud-opacity: 0.25;
+}
+
+@layer base {
+  html {
+    @apply bg-mist;
+  }
+}
+
+@layer components {
+  /* ---------- Hauptmenü ---------- */
+  .site-nav .site-menu {
+    @apply m-0 flex list-none flex-wrap justify-start gap-1 p-0;
+  }
+
+  .site-nav .site-menu > li {
+    @apply relative;
+  }
+
+  .site-nav .menu-link {
+    @apply block rounded-full px-4 py-2.5 text-ui font-medium text-plum-ink no-underline;
+  }
+
+  .site-nav .menu-link:hover,
+  .site-nav .menu-link:focus-visible,
+  .site-nav .menu-link[data-active] {
+    @apply bg-mist text-plum;
+  }
+
+  .site-nav .menu-link[aria-current="page"] {
+    @apply bg-mist font-bold text-plum;
+  }
+
+  .site-nav .dropdown-parent > .menu-link::after {
+    content: " ▾";
+    font-size: 0.75em;
+  }
+
+  /* Letzter Hauptpunkt (Links) als hervorgehobener Button, wie im Entwurf */
+  .site-nav .site-menu > li:last-child > .menu-link {
+    @apply bg-teal font-bold text-white;
+  }
+
+  .site-nav .site-menu > li:last-child > .menu-link:hover,
+  .site-nav .site-menu > li:last-child > .menu-link:focus-visible {
+    @apply bg-teal-dark text-white;
+  }
+
+  .site-nav .dropdown-menu {
+    @apply absolute top-full left-0 z-20 m-0 hidden min-w-60 list-none rounded-media bg-white p-2 shadow-xl;
+  }
+
+  .site-nav .dropdown-parent:hover > .dropdown-menu,
+  .site-nav .dropdown-parent:focus-within > .dropdown-menu {
+    @apply block;
+  }
+
+  .site-nav .dropdown-menu a {
+    @apply block rounded-full px-4 py-2 text-ui font-medium whitespace-nowrap text-plum-ink no-underline;
+  }
+
+  .site-nav .dropdown-menu a:hover,
+  .site-nav .dropdown-menu a:focus-visible,
+  .site-nav .dropdown-menu a[aria-current="page"] {
+    @apply bg-mist text-plum;
+  }
+}
+
+/* ---------- Fließtext aus dem CMS ----------
+   Bewusst außerhalb von @layer: die Typography-Erweiterung setzt .prose im
+   utilities-Layer, der sonst diese Farben überschreiben würde. */
+.prose-sise {
+  --tw-prose-body: var(--color-plum-ink);
+  --tw-prose-headings: var(--color-plum);
+  --tw-prose-lead: var(--color-plum-ink);
+  --tw-prose-links: var(--color-teal);
+  --tw-prose-bold: var(--color-plum);
+  --tw-prose-counters: var(--color-teal);
+  --tw-prose-bullets: var(--color-teal);
+  --tw-prose-hr: var(--color-lilac-muted);
+  --tw-prose-quotes: var(--color-plum);
+  --tw-prose-quote-borders: var(--color-mint);
+  --tw-prose-captions: var(--color-mute);
+  --tw-prose-code: var(--color-plum);
+  --tw-prose-th-borders: var(--color-lilac-muted);
+  --tw-prose-td-borders: var(--color-lilac);
+}
+
+.prose-sise :where(h2, h3, h4):not(:where(.not-prose *)) {
+  @apply font-black tracking-[-0.02em];
+}
+
+.prose-sise {
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+}
+
+.prose-sise :where(h2):not(:where(.not-prose *)) {
+  @apply text-h3 lg:text-h2;
+}
+
+.prose-sise :where(h3):not(:where(.not-prose *)) {
+  @apply text-h4;
+}
+
+.prose-sise :where(a):not(:where(.not-prose *)) {
+  @apply font-bold underline-offset-4 hover:text-plum;
+}
+
+.prose-sise :where(img):not(:where(.not-prose *)) {
+  @apply rounded-media;
+}

@@ -1,0 +1,32 @@
+{{- /*
+  Kacheln für eine Liste von Seiten (z. B. Unterseiten eines Bereichs).
+  Aufruf: {{ partial "kacheln.html" (dict "seiten" $liste "titel" "Optionaler Abschnittstitel") }}
+*/ -}}
+{{- with .seiten }}
+<section class="mt-16 first:mt-0" {{ with $.titel }}aria-label="{{ . }}"{{ end }}>
+  {{- with $.titel }}
+  <h2 class="mt-0 mb-6 eyebrow">{{ . }}</h2>
+  {{- end }}
+  <ul class="m-0 grid list-none gap-6 p-0 sm:grid-cols-2 lg:grid-cols-3">
+    {{- range $i, $p := . }}
+    {{- $akzent := index (slice "bg-mint" "bg-lilac" "bg-teal") (mod $i 3) }}
+    <li class="flex">
+      <a href="{{ $p.RelPermalink }}" class="group flex w-full flex-col overflow-hidden rounded-card bg-white text-plum-ink no-underline transition-transform hover:-translate-y-1 focus-visible:-translate-y-1">
+        {{- with $p.Params.bild | default $p.Params.cover }}
+        <img src="{{ . | relURL }}" alt="" class="aspect-[4/3] w-full object-cover" loading="lazy">
+        {{- end }}
+        <span class="flex flex-1 flex-col gap-3 p-7">
+          <span class="block h-2 w-12 rounded-full {{ $akzent }}" aria-hidden="true"></span>
+          <span class="text-h3 font-black text-plum">{{ $p.Title }}</span>
+          {{- $text := $p.Params.teaser | default ($p.Summary | plainify | truncate 160) }}
+          {{- with $text }}
+          <span class="text-body">{{ . }}</span>
+          {{- end }}
+          <span class="mt-auto pt-2 font-bold text-teal group-hover:underline">Mehr <span aria-hidden="true">→</span></span>
+        </span>
+      </a>
+    </li>
+    {{- end }}
+  </ul>
+</section>
+{{- end }}

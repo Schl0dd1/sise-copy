@@ -1,7 +1,72 @@
-@import url("https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap");
 @import "tailwindcss";
-@import "./custom.css";
+@import "./fonts.css";
+@import "./site.css";
 
 @plugin "@tailwindcss/typography";
 
 @source "../../hugo_stats.json";
+
+/* Design 4a: Farben und Schriften als Tailwind-Theme,
+   nutzbar z. B. als bg-plum, text-mint, font-slab */
+@theme {
+  --color-plum: #491550;
+  --color-plum-ink: #2a2230;
+  --color-teal: #077478;
+  --color-teal-dark: #05585b;
+  --color-mint: #9fd6cf;
+  --color-lilac: #d9c6e0;
+  --color-lilac-muted: #c9b6d2;
+  --color-mist: #e0e7eb;
+  --color-mute: #5d5566;
+
+  --font-roboto: "Roboto", system-ui, sans-serif;
+  --font-slab: "Roboto Slab", Georgia, serif;
+
+  /* Feste Eckenradien – rounded-mark, rounded-media, rounded-card, rounded-section.
+     Pillen (Buttons, Badges, Menü) bleiben rounded-full. */
+  --radius-mark: 6px; /* Text-Hervorhebungen */
+  --radius-media: 10px; /* Bilder, Dropdown, kleine Flächen */
+  --radius-card: 16px; /* Karten, Kacheln, Hinweis-Flächen */
+  --radius-section: 28px; /* große Abschnitte (z. B. Podcast) */
+
+  /* Feste Schriftgrößen – nur diese verwenden (text-small, text-body, text-h2 …).
+     Die Tailwind-Standardgrößen (text-sm, text-lg …) sind bewusst abgeschaltet.
+     Zeilenhöhe und Laufweite sind jeweils mitdefiniert.
+     Fertige Kombinationen für Überschriften: siehe @utility in site.css. */
+  --text-*: initial;
+
+  --text-label: 15px; /* Etiketten in Großbuchstaben: „ÜBER UNS“, „UNSER PODCAST“ */
+  --text-label--line-height: 1.3;
+  --text-label--letter-spacing: 0.14em;
+
+  --text-small: 15px; /* Metaangaben, Badges, Footer-Kleingedrucktes */
+  --text-small--line-height: 1.45;
+
+  --text-ui: 16px; /* Menü, kleine Links */
+  --text-ui--line-height: 1.25;
+
+  --text-body: 18px; /* Fließtext, Buttons, Kacheltexte */
+  --text-body--line-height: 1.6;
+
+  --text-lead: 21px; /* Einleitungen, Teaser unter Überschriften */
+  --text-lead--line-height: 1.5;
+
+  --text-h4: 22px;
+  --text-h4--line-height: 1.3;
+
+  --text-h3: 28px;
+  --text-h3--line-height: 1.15;
+  --text-h3--letter-spacing: -0.02em;
+
+  --text-h2: 40px;
+  --text-h2--line-height: 1.05;
+  --text-h2--letter-spacing: -0.03em;
+
+  --text-h1: 56px;
+  --text-h1--line-height: 0.95;
+  --text-h1--letter-spacing: -0.04em;
+
+  --text-display: 72px;
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.045em;
+}

@@ -1,121 +1,86 @@
-<!DOCTYPE html>
-<html lang="{{ site.Language.Lang | default "de" }}">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>{{ .Title }} | {{ .Site.Title }}</title>
-    <meta name="viewport" content="width=device-width,minimum-scale=1">
-    <meta name="description" content="{{ .Description | default .Site.Params.description }}">
-    <meta name="generator" content="Hugo {{ hugo.Version }}">
-    {{- if hugo.IsDevelopment }}
-      <meta name="robots" content="noindex, nofollow">
-    {{- end }}
-    {{- with .OutputFormats.Get "RSS" }}
-      <link href="{{ .RelPermalink }}" rel="alternate" type="{{ .MediaType.Type }}" title="{{ $.Site.Title }}">
-      <link href="{{ .RelPermalink }}" rel="feed" type="{{ .MediaType.Type }}" title="{{ $.Site.Title }}">
-    {{- end }}
-    <link rel="canonical" href="{{ .Permalink }}">
-    <meta itemprop="name" content="{{ .Title }}">
-    <meta itemprop="description" content="{{ .Description | default .Site.Params.description }}">
-{{ with .Date }}    <meta itemprop="datePublished" content="{{ .Format "2006-01-02T15:04:05-07:00" }}">{{ end }}
-{{ with .Lastmod }}    <meta itemprop="dateModified" content="{{ .Format "2006-01-02T15:04:05-07:00" }}">{{ end }}
-    <meta itemprop="wordCount" content="{{ .WordCount }}">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="{{ .Title }}">
-    <meta name="twitter:description" content="{{ .Description | default .Site.Params.description }}">
-    {{ with (templates.Defer (dict "key" "global")) }}
-      {{ partial "css.html" . }}
-    {{ end }}
-  </head>
-  <body class="sise-home">
-    <header class="site-header">
-      <a class="logo" href="{{ .Site.Home.RelPermalink }}">SI<span>SE</span></a>
-      <nav class="site-nav" aria-label="Hauptnavigation">
-        {{ partial "main-menu.html" . }}
-      </nav>
-    </header>
-
-    <main role="main">
-      <section class="hero" aria-labelledby="start-hero-title">
-        <div class="hero-eyebrow">Initiative gegen sexualisierte Gewalt</div>
-        <h1 class="heading-1" id="start-hero-title">
-          <span class="accent">Sichtbar</span>
-          &amp; Selbstbestimmt
-        </h1>
-        <div class="hero-sub">
-          <div class="hero-tagline">
-            <p class="hero-text">Wir bieten Workshops, Materialien und einen Podcast &ndash; f&uuml;r alle, die aktiv werden wollen.</p>
-            <a class="btn-primary" href="{{ "materialien/" | relURL }}">Zu den Materialien</a>
+{{- /*
+  Startseite – Design 4a (Claude Design „Website“, Variante 4a).
+  Header/Footer kommen aus _default/baseof.html. Gestaltung mit Tailwind-Klassen;
+  Farben/Schriften: @theme in assets/css/main.css.
+  Seitenränder: px-4 (Handy) · sm:px-8 · lg:px-16
+*/ -}}
+{{ define "main" }}
+{{- $px := "px-4 sm:px-8 lg:px-16" }}
+      {{- /* Hero */}}
+      <section class="grid items-center gap-10 {{ $px }} pt-8 pb-16 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:pt-12 lg:pb-[88px]" aria-labelledby="hero-title">
+        <div class="flex flex-col gap-[30px]">
+          <span class="self-start rounded-full bg-lilac px-4 py-2 text-small font-bold text-plum">Politische Gruppe gegen sexualisierte Gewalt</span>
+          <h1 id="hero-title" class="heading-display m-0 flex flex-col">
+            <span>Sichtbar</span>
+            <span class="whitespace-nowrap"><span class="font-slab font-normal tracking-normal text-teal">&amp;</span> <span class="rounded-media bg-mint px-3.5">Selbstbestimmt</span></span>
+          </h1>
+          <p class="m-0 max-w-[520px] text-lead text-pretty">Wir sprechen über sexualisierte Gewalt und die Verhältnisse, die sie möglich machen – im Podcast, in Workshops und bei Veranstaltungen.</p>
+          <div class="flex flex-wrap gap-3.5">
+            <a href="{{ "ueber-uns/" | relURL }}" class="inline-flex items-center gap-2.5 rounded-full bg-plum px-[30px] py-[17px] text-body font-bold text-white no-underline hover:bg-teal focus-visible:bg-teal">Über uns <span aria-hidden="true">→</span></a>
+            <a href="{{ "was-wir-machen/podcast/" | relURL }}" class="inline-flex items-center gap-2.5 rounded-full border-2 border-plum px-7 py-[15px] text-body font-bold text-plum no-underline hover:bg-plum hover:text-white focus-visible:bg-plum focus-visible:text-white"><span aria-hidden="true">▶</span> Podcast hören</a>
+          </div>
+        </div>
+        <div class="relative h-[320px] sm:h-[400px] lg:h-[580px]" aria-hidden="true">
+          <div class="grain absolute top-5 -right-6 size-[220px] rounded-full bg-lilac sm:size-[280px] lg:-right-10 lg:size-[420px]"></div>
+          <div class="{{ if not .Params.hero_image }}grain grain-dark {{ end }}absolute top-0 left-0 h-[300px] w-[215px] overflow-hidden sm:h-[380px] sm:w-[270px] rounded-t-[200px] rounded-b-card bg-[linear-gradient(160deg,#491550,#077478)] lg:left-[30px] lg:h-[560px] lg:w-[400px]">
+            {{- with .Params.hero_image }}
+            <img src="{{ . | relURL }}" alt="" class="size-full object-cover">
+            {{- end }}
           </div>
         </div>
       </section>
 
-      <section class="cards-section" id="materialien" aria-labelledby="materialien-title">
-        <div class="section-label">Materialien</div>
-        <h2 class="section-heading heading-2" id="materialien-title">Was wir anbieten</h2>
-        <div class="cards-grid">
-          <article class="card">
-            <div class="card-number">01</div>
-            <h3 class="heading-3">Gruppe gr&uuml;nden</h3>
-            <p>Schritt f&uuml;r Schritt zur eigenen SISE-Gruppe &ndash; mit allem, was ihr daf&uuml;r braucht.</p>
-            <a class="card-link" href="{{ "workshops/" | relURL }}">Mehr erfahren</a>
-          </article>
-          <article class="card">
-            <div class="card-number">02</div>
-            <h3 class="heading-3">Zine</h3>
-            <p>Unser Zine als PDF &ndash; kostenlos zum Download. Druckt es aus, verteilt es weiter.</p>
-            <a class="card-link" href="{{ "links/" | relURL }}">Download</a>
-          </article>
-          <article class="card">
-            <div class="card-number">03</div>
-            <h3 class="heading-3">Mehr entdecken</h3>
-            <p>Collagen, Redebeitr&auml;ge von Demonstrationen und weiterf&uuml;hrende Links.</p>
-            <a class="card-link" href="{{ "gallery/" | relURL }}">Zur &Uuml;bersicht</a>
-          </article>
+      {{- /* Laufband */}}
+      <div class="flex justify-center gap-4 overflow-hidden bg-plum py-3 text-h4 leading-tight font-black whitespace-nowrap text-mint lg:gap-6 lg:py-3.5 lg:text-h3 lg:leading-tight" aria-hidden="true">
+        {{- range $i, $w := slice "Sichtbar" "Selbstbestimmt" "Zärtlich" "Zornig" "Solidarisch" "Sichtbar" "Selbstbestimmt" "Zärtlich" "Zornig" "Solidarisch" }}
+          {{- if $i }}<span class="font-slab font-normal text-white">&amp;</span>{{ end }}<span>{{ $w }}</span>
+        {{- end }}
+      </div>
+
+      {{- /* Über uns */}}
+      <section class="grid gap-6 {{ $px }} pt-20 pb-20 lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-12 lg:pt-[120px] lg:pb-[110px]" aria-labelledby="about-label">
+        <h2 id="about-label" class="eyebrow m-0 lg:pt-3">Über uns</h2>
+        <div class="flex flex-col gap-8">
+          <p class="m-0 font-slab text-h4 font-light tracking-normal text-pretty text-plum sm:text-h3 sm:leading-[1.35] lg:text-h2 lg:leading-[1.3]">Sichtbar &amp; Selbstbestimmt ist eine <span class="rounded-mark bg-mint px-2 box-decoration-clone">selbstorganisierte</span> Gruppe von Betroffenen sexualisierter Gewalt, gegründet 2019 in Leipzig. Als politische Gruppe nehmen wir die <span class="rounded-mark bg-lilac px-2 box-decoration-clone">Strukturen</span> in den Blick, die sexualisierte Gewalt ermöglichen und aufrechterhalten.</p>
+          <a href="{{ "ueber-uns/" | relURL }}" class="inline-flex items-center gap-2.5 self-start text-body font-bold text-plum hover:text-teal">Mehr über uns <span aria-hidden="true">→</span></a>
         </div>
       </section>
 
-      <section class="events-section" aria-labelledby="events-title">
-        <div class="section-label">Aktuelles</div>
-        <h2 class="section-heading heading-2" id="events-title">N&auml;chste Veranstaltung</h2>
-        <article class="event-card">
-          <div class="event-date-block" aria-label="17. Mai">
-            <div class="event-day">17</div>
-            <div class="event-month">Mai</div>
-          </div>
-          <div class="event-info">
-            <div class="event-tag">Workshop</div>
-            <div class="event-title heading-4">Sprechen, was schweigt</div>
-            <div class="event-meta">19:00 Uhr &middot; Kulturzentrum Leipzig</div>
-          </div>
-          <div class="event-action">
-            <a class="btn-primary" href="{{ "posts/" | relURL }}">Mehr &rarr;</a>
-          </div>
-        </article>
+      {{- /* Veranstaltungen – die nächsten 3 (CMS: „Veranstaltungen“) */}}
+      <section class="flex flex-col {{ $px }} pt-0 pb-20 lg:pb-[110px]" aria-labelledby="events-title">
+        <div class="mb-7 flex flex-wrap items-end justify-between gap-6">
+          <h2 id="events-title" class="heading-display m-0">Veranstaltungen</h2>
+          <a href="{{ "veranstaltungen/" | relURL }}" class="text-body font-bold text-plum hover:text-teal">Alle Veranstaltungen <span aria-hidden="true">→</span></a>
+        </div>
+        {{ partial "veranstaltungen-liste.html" (dict "limit" 3) }}
       </section>
 
-      <section class="podcast-section" aria-labelledby="podcast-title">
-        <div class="section-label">Podcast</div>
-        <h2 class="section-heading heading-2" id="podcast-title">Z&auml;rtlich und Zornig</h2>
-        <article class="podcast-card">
-          <div>
-            <div class="podcast-ep">Folge 12</div>
-            <div class="podcast-title heading-3">Warum Schweigen keine Option ist</div>
-            <p class="podcast-desc">In dieser Folge sprechen wir &uuml;ber gesellschaftliche Strukturen, die Schweigen erzwingen &ndash; und was wir dagegen tun k&ouml;nnen.</p>
-          </div>
-          <a class="play-btn" href="{{ "podcasts/" | relURL }}" aria-label="Podcast ansehen"></a>
-        </article>
+      {{- /* Podcast – neueste Folge automatisch (CMS: „Podcast-Folgen“) */}}
+      {{- $episode := index ((where site.RegularPages "Type" "podcast").ByDate.Reverse) 0 }}
+      <section class="relative flex flex-col gap-12 grain bg-podcast rounded-t-section {{ $px }} py-20 text-plum lg:py-[100px]" aria-labelledby="podcast-title">
+        <div class="flex flex-col gap-1.5">
+          <span class="eyebrow mb-4">Unser Podcast</span>
+          <h2 id="podcast-title" class="m-0 flex flex-wrap items-baseline gap-x-[0.25em] text-h2 whitespace-nowrap text-plum sm:text-h1 xl:text-display">
+            <span class="font-slab font-light tracking-[-0.02em]">Zärtlich</span>
+            <span class="font-black italic">&amp; Zornig</span>
+          </h2>
+          <p class="mt-6 mb-0 max-w-[460px] text-lead text-plum-ink">Gespräche über Gewalt, Macht und Widerstand – und darüber, was uns trägt.</p>
+        </div>
+        {{- with $episode }}
+        <div class="w-full [&>article]:shadow-[0_20px_50px_-20px_rgba(73,21,80,0.35)]">
+          {{ partial "podcast-folge.html" (dict "page" . "ebene" "h3" "neu" true) }}
+        </div>
+        {{- end }}
       </section>
-    </main>
 
-    <footer class="site-footer">
-      <div class="footer-logo">SISE</div>
-      <nav class="footer-links" aria-label="Footer-Navigation">
-        <a href="{{ "posts/" | relURL }}">Aktuelles</a>
-        <a href="{{ "workshops/" | relURL }}">Workshops</a>
-        <a href="{{ "links/" | relURL }}">Links</a>
-        <a href="{{ "kontakt/" | relURL }}">Kontakt</a>
-      </nav>
-    </footer>
-  </body>
-</html>
+      {{- /* Unterstützung */}}
+      <div class="flex justify-center {{ $px }} pt-20 lg:pt-[110px]">
+        <a href="{{ "links/" | relURL }}" class="grain grain-dark relative grid max-w-[860px] grid-cols-[minmax(0,1fr)_auto] items-center gap-6 rounded-card bg-teal p-8 text-white no-underline hover:bg-teal-dark lg:-rotate-[1.5deg] lg:gap-8 lg:px-14 lg:py-12">
+          <span class="flex flex-col gap-2.5">
+            <span class="text-label font-bold uppercase">Du suchst Unterstützung?</span>
+            <strong class="text-h3 font-black lg:text-h2">Wir sind keine Anlaufstelle. Aber wir kennen welche.</strong>
+          </span>
+          <span class="flex size-16 items-center justify-center rounded-full bg-white text-h4 text-teal lg:size-[84px] lg:text-h3" aria-hidden="true">→</span>
+        </a>
+      </div>
+{{ end }}

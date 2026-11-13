@@ -1,0 +1,10 @@
+<a href="#inhalt" class="sr-only rounded-full bg-plum px-5 py-3 font-bold text-white focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50">Zum Inhalt springen</a>
+<header class="flex flex-col items-start justify-between gap-6 px-4 py-6 sm:px-8 lg:flex-row lg:items-center lg:gap-8 lg:px-12">
+  <a href="{{ site.Home.RelPermalink }}" class="flex shrink-0 items-center gap-3 text-plum no-underline">
+    <span class="flex size-[52px] items-center justify-center rounded-full bg-plum font-slab text-h3 font-normal tracking-normal text-mint" aria-hidden="true">&amp;</span>
+    <span class="text-lead leading-none font-black">Sichtbar<br>&amp; Selbstbestimmt</span>
+  </a>
+  <nav class="site-nav relative z-10 rounded-card bg-white p-1.5 lg:rounded-full" aria-label="Hauptnavigation">
+    {{ partial "main-menu.html" . }}
+  </nav>
+</header>

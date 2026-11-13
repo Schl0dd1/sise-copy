@@ -1,0 +1,12 @@
+{{- /* Bilderraster eines Albums. Aufruf mit der Liste .Params.photos (je image + alt). */ -}}
+{{- with . }}
+<ul class="m-0 grid list-none grid-cols-2 gap-4 p-0 sm:grid-cols-3 lg:grid-cols-4">
+  {{- range . }}
+  <li>
+    <a href="{{ .image | relURL }}" class="block overflow-hidden rounded-media bg-white">
+      <img src="{{ .image | relURL }}" alt="{{ .alt }}" class="aspect-square w-full object-cover transition-transform hover:scale-105" loading="lazy">
+    </a>
+  </li>
+  {{- end }}
+</ul>
+{{- end }}

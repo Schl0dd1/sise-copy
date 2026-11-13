@@ -1,3 +1,9 @@
+# Decap CMS – Konfiguration
+# Aufbau der Website: content/<bereich>/_index.md = Übersichtsseite eines Hauptmenü-Punkts,
+# content/<bereich>/*.md mit typ: unterseite = Unterseiten (Dropdown + Kacheln).
+# Die Ordner enthalten auch die _index.md-Dateien; „filter: typ“ sorgt dafür,
+# dass jede Sammlung nur ihre eigenen Einträge zeigt.
+
 backend:
   name: git-gateway
   branch: main
@@ -12,171 +18,465 @@ media_folder: "static/images"
 public_folder: "/images"
 
 collections:
-  - name: "pages"
-    label: "Statische Seiten"
-    format: frontmatter
-    files:
-      - label: "Über uns"
-        name: "ueber-uns"
-        file: "content/pages/wer-wir-sind.md"
-        fields:
-          - { label: "Titel", name: "title", widget: "string" }
-          - { label: "Text", name: "body", widget: "markdown" }
-      - label: "Workshops"
-        name: "workshops"
-        file: "content/projects/workshops.md"
-        fields:
-          - { label: "Titel", name: "title", widget: "string" }
-          - { label: "Text", name: "body", widget: "markdown" }
-      - label: "Podcast"
-        name: "podcast"
-        file: "content/podcasts/_index.md"
-        fields:
-          - { label: "Titel", name: "title", widget: "string" }
-          - {
-              label: "Einleitungstext",
-              name: "body",
-              widget: "markdown",
-              required: false,
-              hint: "Steht auf /podcasts/ über der Liste der Folgen. Folgen selbst werden unter „Podcasts“ angelegt.",
-            }
-      - label: "Materialien"
-        name: "materialien"
-        file: "content/pages/materialien.md"
-        fields:
-          - { label: "Titel", name: "title", widget: "string" }
-          - { label: "Text", name: "body", widget: "markdown" }
-      - label: "Kontakt"
-        name: "kontakt"
-        file: "content/pages/kontakt.md"
-        fields:
-          - { label: "Titel", name: "title", widget: "string" }
-          - { label: "Text", name: "body", widget: "markdown" }
-
-  - name: "seiten"
-    label: "Weitere Seiten"
-    label_singular: "Seite"
-    description: "Eigene Seiten, z. B. Links oder Vorträge. Jede Seite ist unter /<url-name>/ erreichbar."
-    folder: "content/pages"
-    # Nur Seiten mit typ: weitere – die statischen Seiten liegen im selben Ordner
-    filter: { field: "typ", value: "weitere" }
-    create: true
-    slug: "{{slug}}"
+- name: statische-seiten
+  label: Statische Seiten
+  description: "Seiten, die immer existieren: Übersichtsseiten der Hauptmenü-Bereiche und Footer-Seiten."
+  files:
+  - label: Über uns
+    name: ueber-uns
+    file: content/ueber-uns/_index.md
     fields:
-      - { label: "Typ", name: "typ", widget: "hidden", default: "weitere" }
-      - {
-          label: "Titel",
-          name: "title",
-          widget: "string",
-          hint: "Beim ersten Speichern wird daraus die Adresse der Seite (z. B. „Über uns“ → /uber-uns/). Sie bleibt danach gleich, auch wenn der Titel geändert wird.",
-        }
-      - { label: "Datum", name: "date", widget: "datetime" }
-      - label: "Im Menü anzeigen"
-        name: "menu_bereich"
-        widget: "select"
-        default: "keins"
-        options:
-          - { label: "Nicht im Menü", value: "keins" }
-          - { label: "Im Hauptmenü", value: "hauptmenue" }
-          - { label: "Unter „Was wir machen“", value: "was-wir-machen" }
-      - label: "Menütext"
-        name: "menu_name"
-        widget: "string"
-        required: false
-        hint: "Optional, falls im Menü ein kürzerer Text als der Titel stehen soll."
-      - label: "Position im Menü"
-        name: "menu_position"
-        widget: "number"
-        value_type: "int"
-        required: false
-        hint: >-
-          Kleinere Zahl = weiter vorne. Leer = ganz am Ende.
-          Hauptmenü: Startseite 10 · Aktuelles 20 · Was wir machen 30 · Materialien 35 · Links 40 · Galerie 50 · Kontakt 60
-          (z. B. 55 = zwischen Galerie und Kontakt).
-          Unter „Was wir machen“: Podcasts 10 · Workshops 20 · Vorträge 30.
-      - { label: "Text", name: "body", widget: "markdown" }
-
-  - name: "posts"
-    label: "Posts"
-    folder: "content/posts"
-    create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    - label: Titel
+      name: title
+      widget: string
+    - label: Text
+      name: body
+      widget: markdown
+      required: false
+      hint: Steht oben auf der Übersichtsseite. Darunter erscheinen automatisch die Unterseiten.
+  - label: Veranstaltungen
+    name: veranstaltungen
+    file: content/veranstaltungen/_index.md
     fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Date", name: "date", widget: "datetime" }
-      - { label: "Body", name: "body", widget: "markdown" }
-
-  - name: "podcasts"
-    label: "Podcasts"
-    label_singular: "Folge"
-    description: "Jede Folge bekommt eine eigene Seite. Titel, Bild, Player und Teaser erscheinen automatisch auf der Übersicht /podcasts/."
-    folder: "content/podcasts"
-    create: true
-    sortable_fields: ["date", "title"]
+    - label: Titel
+      name: title
+      widget: string
+    - label: Einleitungstext
+      name: body
+      widget: markdown
+      required: false
+      hint: Steht oben auf der Übersichtsseite. Darunter erscheinen automatisch die Unterseiten und kommenden Veranstaltungen.
+  - label: Was wir machen
+    name: was-wir-machen
+    file: content/was-wir-machen/_index.md
     fields:
-      - { label: "Titel", name: "title", widget: "string" }
-      - {
-          label: "Datum",
-          name: "date",
-          widget: "datetime",
-          hint: "Neueste Folgen stehen in der Übersicht oben.",
-        }
-      - {
-          label: "Vorschaubild",
-          name: "cover",
-          widget: "image",
-          required: false,
-          hint: "Wird links neben der Folge angezeigt, am besten quadratisch.",
-        }
-      - {
-          label: "Audiodatei",
-          name: "audio",
-          widget: "file",
-          hint: "MP3-Datei oder Link zu einer Audiodatei. Wird als Player in der Übersicht und auf der Folgenseite angezeigt.",
-        }
-      - {
-          label: "Dauer",
-          name: "duration",
-          widget: "string",
-          required: false,
-          hint: "z. B. 32:10",
-        }
-      - {
-          label: "Teaser",
-          name: "teaser",
-          widget: "text",
-          hint: "Kurzer Beschreibungstext (1–3 Sätze) für die Übersicht. Steht auch oben auf der Folgenseite.",
-        }
-      - {
-          label: "Ausführlicher Text",
-          name: "body",
-          widget: "markdown",
-          required: false,
-          hint: "Erscheint nur auf der Folgenseite, z. B. Shownotes, Gäst*innen, Links.",
-        }
-
-  - name: "gallery"
-    label: "Galerie"
-    folder: "content/gallery"
-    create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    - label: Titel
+      name: title
+      widget: string
+    - label: Einleitungstext
+      name: body
+      widget: markdown
+      required: false
+      hint: Steht oben auf der Übersichtsseite. Darunter erscheinen automatisch die Unterseiten.
+  - label: Was wir machen › Podcast
+    name: podcast
+    file: content/was-wir-machen/podcast/_index.md
     fields:
-      - { label: "Titel", name: "title", widget: "string" }
-      - label: "Bilder"
-        name: "photos"
-        widget: "list"
-        fields:
-          - { label: "Bild", name: "image", widget: "image" }
-          - {
-              label: "Bildbeschreibung",
-              name: "alt",
-              widget: "string",
-              required: false,
-              hint: "Beschreibung für Screenreader / blinde Nutzer*innen",
-            }
-      - {
-          label: "Album Beschreibung",
-          name: "body",
-          widget: "markdown",
-          required: false,
-        }
+    - label: Titel
+      name: title
+      widget: string
+    - &id001
+      label: Kurzbeschreibung
+      name: teaser
+      widget: text
+      required: false
+      hint: 1–2 Sätze. Erscheint auf der Kachel in der Übersicht und oben auf der Seite.
+    - &id002
+      label: Reihenfolge
+      name: weight
+      widget: number
+      value_type: int
+      required: false
+      hint: Kleinere Zahl = weiter vorne (in Dropdown-Menü und Übersicht). Leer = ans Ende.
+    - label: Einleitungstext
+      name: body
+      widget: markdown
+      required: false
+      hint: Steht auf der Podcast-Seite über der Liste der Folgen. Folgen werden unter „Podcast-Folgen“ angelegt.
+  - label: "Beiträge & kreative Aktionen"
+    name: beitraege
+    file: content/beitraege/_index.md
+    fields:
+    - label: Titel
+      name: title
+      widget: string
+    - label: Einleitungstext
+      name: body
+      widget: markdown
+      required: false
+      hint: Steht oben auf der Übersichtsseite. Darunter erscheinen automatisch die Unterseiten.
+  - label: Beiträge › Galerie
+    name: galerie
+    file: content/beitraege/galerie/_index.md
+    fields:
+    - label: Titel
+      name: title
+      widget: string
+    - *id001
+    - *id002
+    - label: Einleitungstext
+      name: body
+      widget: markdown
+      required: false
+      hint: Steht auf der Galerie-Seite über den Alben. Alben werden unter „Galerie-Alben“ angelegt.
+  - label: Links
+    name: links
+    file: content/links/_index.md
+    fields:
+    - label: Titel
+      name: title
+      widget: string
+    - label: Text
+      name: body
+      widget: markdown
+      required: false
+      hint: Steht oben auf der Übersichtsseite. Darunter erscheinen automatisch die Unterseiten.
+  - label: Kontakt (Footer)
+    name: kontakt
+    file: content/pages/kontakt.md
+    fields:
+    - label: Titel
+      name: title
+      widget: string
+    - label: Text
+      name: body
+      widget: markdown
+  - label: Impressum (Footer)
+    name: impressum
+    file: content/pages/impressum.md
+    fields:
+    - label: Titel
+      name: title
+      widget: string
+    - label: Text
+      name: body
+      widget: markdown
+  - label: Datenschutz (Footer)
+    name: datenschutz
+    file: content/pages/datenschutz.md
+    fields:
+    - label: Titel
+      name: title
+      widget: string
+    - label: Text
+      name: body
+      widget: markdown
+- name: unterseiten-ueber-uns
+  label: "Unterseiten: Über uns"
+  label_singular: Unterseite von „Über uns“
+  description: Neue Unterseiten erscheinen automatisch im Dropdown-Menü unter „Über uns“ und als Kachel auf der Übersichtsseite.
+  folder: content/ueber-uns
+  filter:
+    field: typ
+    value: unterseite
+  create: true
+  slug: "{{slug}}"
+  sortable_fields:
+  - weight
+  - title
+  fields:
+  - label: Typ
+    name: typ
+    widget: hidden
+    default: unterseite
+  - label: Titel
+    name: title
+    widget: string
+    hint: Beim ersten Speichern wird daraus die Adresse (z. B. /ueber-uns/mein-titel/). Sie bleibt danach gleich.
+  - *id001
+  - &id003
+    label: Bild
+    name: bild
+    widget: image
+    required: false
+    hint: Optional. Erscheint auf der Kachel und oben auf der Seite.
+  - *id002
+  - label: Text
+    name: body
+    widget: markdown
+- name: unterseiten-veranstaltungen
+  label: "Unterseiten: Veranstaltungen"
+  label_singular: Unterseite von „Veranstaltungen“
+  description: Neue Unterseiten erscheinen automatisch im Dropdown-Menü unter „Veranstaltungen“ und als Kachel auf der Übersichtsseite.
+  folder: content/veranstaltungen
+  filter:
+    field: typ
+    value: unterseite
+  create: true
+  slug: "{{slug}}"
+  sortable_fields:
+  - weight
+  - title
+  fields:
+  - label: Typ
+    name: typ
+    widget: hidden
+    default: unterseite
+  - label: Titel
+    name: title
+    widget: string
+    hint: Beim ersten Speichern wird daraus die Adresse (z. B. /veranstaltungen/mein-titel/). Sie bleibt danach gleich.
+  - *id001
+  - *id003
+  - *id002
+  - label: Text
+    name: body
+    widget: markdown
+- name: unterseiten-was-wir-machen
+  label: "Unterseiten: Was wir machen"
+  label_singular: Unterseite von „Was wir machen“
+  description: Neue Unterseiten erscheinen automatisch im Dropdown-Menü unter „Was wir machen“ und als Kachel auf der Übersichtsseite.
+  folder: content/was-wir-machen
+  filter:
+    field: typ
+    value: unterseite
+  create: true
+  slug: "{{slug}}"
+  sortable_fields:
+  - weight
+  - title
+  fields:
+  - label: Typ
+    name: typ
+    widget: hidden
+    default: unterseite
+  - label: Titel
+    name: title
+    widget: string
+    hint: Beim ersten Speichern wird daraus die Adresse (z. B. /was-wir-machen/mein-titel/). Sie bleibt danach gleich.
+  - *id001
+  - *id003
+  - *id002
+  - label: Text
+    name: body
+    widget: markdown
+- name: unterseiten-beitraege
+  label: "Unterseiten: Beiträge & kreative Aktionen"
+  label_singular: "Unterseite von „Beiträge & kreative Aktionen“"
+  description: "Neue Unterseiten erscheinen automatisch im Dropdown-Menü unter „Beiträge & kreative Aktionen“ und als Kachel auf der Übersichtsseite."
+  folder: content/beitraege
+  filter:
+    field: typ
+    value: unterseite
+  create: true
+  slug: "{{slug}}"
+  sortable_fields:
+  - weight
+  - title
+  fields:
+  - label: Typ
+    name: typ
+    widget: hidden
+    default: unterseite
+  - label: Titel
+    name: title
+    widget: string
+    hint: Beim ersten Speichern wird daraus die Adresse (z. B. /beitraege/mein-titel/). Sie bleibt danach gleich.
+  - *id001
+  - *id003
+  - *id002
+  - label: Text
+    name: body
+    widget: markdown
+- name: unterseiten-links
+  label: "Unterseiten: Links"
+  label_singular: Unterseite von „Links“
+  description: Neue Unterseiten erscheinen automatisch im Dropdown-Menü unter „Links“ und als Kachel auf der Übersichtsseite.
+  folder: content/links
+  filter:
+    field: typ
+    value: unterseite
+  create: true
+  slug: "{{slug}}"
+  sortable_fields:
+  - weight
+  - title
+  fields:
+  - label: Typ
+    name: typ
+    widget: hidden
+    default: unterseite
+  - label: Titel
+    name: title
+    widget: string
+    hint: Beim ersten Speichern wird daraus die Adresse (z. B. /links/mein-titel/). Sie bleibt danach gleich.
+  - *id001
+  - *id003
+  - *id002
+  - label: Text
+    name: body
+    widget: markdown
+- name: veranstaltungen
+  label: Veranstaltungen
+  label_singular: Veranstaltung
+  description: Die nächsten drei erscheinen auf der Startseite, alle kommenden auf /veranstaltungen/. Vergangene werden automatisch ausgeblendet.
+  folder: content/veranstaltungen
+  filter:
+    field: typ
+    value: veranstaltung
+  create: true
+  slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+  sortable_fields:
+  - termin
+  - title
+  summary: "{{termin | date('DD.MM.YYYY HH:mm')}} – {{title}}"
+  fields:
+  - label: Typ
+    name: typ
+    widget: hidden
+    default: veranstaltung
+  - label: Titel
+    name: title
+    widget: string
+  - label: Datum und Uhrzeit
+    name: termin
+    widget: datetime
+    format: "YYYY-MM-DDTHH:mm:ssZ"
+    date_format: DD.MM.YYYY
+    time_format: "HH:mm"
+  - label: Art
+    name: kategorie
+    widget: string
+    required: false
+    hint: "z. B. Workshop, Live-Podcast, Lesung & Gespräch"
+  - label: Ort
+    name: ort
+    widget: string
+    required: false
+    hint: z. B. Connewitz oder genaue Adresse
+  - label: Hinweis
+    name: hinweis
+    widget: string
+    required: false
+    hint: "z. B. barrierearm, nur für FLINTA*, Anmeldung nötig"
+  - label: Beschreibung
+    name: body
+    widget: markdown
+    required: false
+    hint: Erscheint auf der Seite der Veranstaltung.
+- name: podcast-folgen
+  label: Podcast-Folgen
+  label_singular: Folge
+  description: Jede Folge bekommt eine eigene Seite. Titel, Bild, Player und Kurzbeschreibung erscheinen automatisch auf der Podcast-Seite; die neueste Folge auch auf der Startseite.
+  folder: content/was-wir-machen/podcast
+  filter:
+    field: typ
+    value: folge
+  create: true
+  sortable_fields:
+  - date
+  - title
+  fields:
+  - label: Typ
+    name: typ
+    widget: hidden
+    default: folge
+  - label: Titel
+    name: title
+    widget: string
+  - label: Datum
+    name: date
+    widget: datetime
+    hint: Neueste Folgen stehen oben.
+  - label: Vorschaubild
+    name: cover
+    widget: image
+    required: false
+    hint: Am besten quadratisch.
+  - label: Audiodatei
+    name: audio
+    widget: file
+    hint: MP3-Datei oder Link zu einer Audiodatei.
+  - label: Dauer
+    name: duration
+    widget: string
+    required: false
+    hint: "z. B. 32:10"
+  - label: Kurzbeschreibung
+    name: teaser
+    widget: text
+    hint: 1–3 Sätze für die Übersicht. Steht auch oben auf der Folgenseite.
+  - label: Ausführlicher Text
+    name: body
+    widget: markdown
+    required: false
+    hint: "Erscheint nur auf der Folgenseite, z. B. Shownotes, Gäst*innen, Links."
+- name: galerie-alben
+  label: Galerie-Alben
+  label_singular: Album
+  folder: content/beitraege/galerie
+  filter:
+    field: typ
+    value: album
+  create: true
+  slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+  fields:
+  - label: Typ
+    name: typ
+    widget: hidden
+    default: album
+  - label: Titel
+    name: title
+    widget: string
+  - label: Bilder
+    name: photos
+    widget: list
+    fields:
+    - label: Bild
+      name: image
+      widget: image
+    - label: Bildbeschreibung
+      name: alt
+      widget: string
+      required: false
+      hint: "Beschreibung für Screenreader / blinde Nutzer*innen"
+  - label: Albumbeschreibung
+    name: body
+    widget: markdown
+    required: false
+- name: seiten
+  label: Weitere Seiten
+  label_singular: Seite
+  description: "Freie Seiten außerhalb der Bereiche, erreichbar unter /<url-name>/. Optional im Menü."
+  folder: content/pages
+  filter:
+    field: typ
+    value: weitere
+  create: true
+  slug: "{{slug}}"
+  fields:
+  - label: Typ
+    name: typ
+    widget: hidden
+    default: weitere
+  - label: Titel
+    name: title
+    widget: string
+    hint: Beim ersten Speichern wird daraus die Adresse der Seite (z. B. „Über uns“ → /uber-uns/). Sie bleibt danach gleich, auch wenn der Titel geändert wird.
+  - label: Datum
+    name: date
+    widget: datetime
+  - label: Im Menü anzeigen
+    name: menu_bereich
+    widget: select
+    default: "keins"
+    options:
+    - label: Nicht im Menü
+      value: "keins"
+    - label: Im Hauptmenü
+      value: hauptmenue
+    - label: Unter „Über uns“
+      value: ueber-uns
+    - label: Unter „Veranstaltungen“
+      value: veranstaltungen
+    - label: Unter „Was wir machen“
+      value: was-wir-machen
+    - label: "Unter „Beiträge & kreative Aktionen“"
+      value: beitraege
+    - label: Unter „Links“
+      value: links
+  - label: Menütext
+    name: menu_name
+    widget: string
+    required: false
+    hint: Optional, falls im Menü ein kürzerer Text als der Titel stehen soll.
+  - label: Position im Menü
+    name: menu_position
+    widget: number
+    value_type: int
+    required: false
+    hint: "Kleinere Zahl = weiter vorne. Leer = ganz am Ende. Hauptmenü: Über uns 10 · Veranstaltungen 20 · Was wir machen 30 · Beiträge & kreative Aktionen 40 · Links 50 (z. B. 45 = zwischen Beiträge und\
+      \ Links). In einem Dropdown gilt die „Reihenfolge“ der Unterseiten."
+  - label: Text
+    name: body
+    widget: markdown

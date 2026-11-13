@@ -1,0 +1,11 @@
+<footer class="mt-20 flex flex-col gap-9 bg-plum px-4 pt-14 pb-9 text-white sm:px-8 lg:mt-[120px] lg:px-16">
+  <div class="text-h3 font-black text-mint sm:text-h2 lg:text-h1" aria-hidden="true">Sichtbar <span class="font-slab font-normal text-white">&amp;</span> Selbstbestimmt</div>
+  <div class="flex flex-wrap justify-between gap-6 border-t border-white/30 pt-5 text-body">
+    <span class="text-[#e6dbe9]">© {{ now.Year }} {{ site.Title }}</span>
+    <nav class="flex flex-wrap gap-x-8 gap-y-2" aria-label="Footer-Navigation">
+      <a href="{{ "kontakt/" | relURL }}" class="text-white hover:text-mint">Kontakt</a>
+      <a href="{{ "impressum/" | relURL }}" class="text-white hover:text-mint">Impressum</a>
+      <a href="{{ "datenschutz/" | relURL }}" class="text-white hover:text-mint">Datenschutzerklärung</a>
+    </nav>
+  </div>
+</footer>

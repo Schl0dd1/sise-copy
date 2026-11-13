@@ -1,0 +1,15 @@
+{{- /*
+  Seitenkopf für Unterseiten: Bereich als Etikett (verlinkt), große Überschrift, optional Teaser.
+  Aufruf: {{ partial "page-header.html" . }}
+*/ -}}
+<header class="mb-12 flex flex-col gap-6 lg:mb-16">
+  {{- with .Parent }}
+  {{- if and (not .IsHome) (ne .Section "pages") }}
+  <a href="{{ .RelPermalink }}" class="self-start rounded-full bg-lilac px-4 py-2 text-small font-bold text-plum no-underline hover:bg-mint focus-visible:bg-mint"><span aria-hidden="true">←</span> {{ .LinkTitle }}</a>
+  {{- end }}
+  {{- end }}
+  <h1 class="heading-display m-0">{{ .Title }}</h1>
+  {{- with .Params.teaser }}
+  <p class="m-0 max-w-[680px] text-lead text-pretty">{{ . }}</p>
+  {{- end }}
+</header>

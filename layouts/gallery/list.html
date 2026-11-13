@@ -1,21 +1,22 @@
 {{ define "main" }}
-<div class="page-shell">
-  <header class="page-header">
-    <h1 class="heading-1">Galerie</h1>
-  </header>
+<div class="px-4 pt-8 pb-4 sm:px-8 lg:px-16 lg:pt-12">
+  {{ partial "page-header.html" . }}
 
-  <div class="gallery-list">
-    {{- range .Pages }}
-    <section>
-      <h2 class="heading-2">{{ .Title }}</h2>
-      {{- with .Params.description }}
-      <p class="content">{{ . }}</p>
-      {{- end }}
-      <div class="gallery-grid">
-        {{- range .Params.photos }}
-        <img class="gallery-image" src="{{ .image }}" alt="{{ .alt }}">
-        {{- end }}
+  {{- with .Content }}
+  <div class="prose-sise prose mb-12 max-w-[880px]">{{ . }}</div>
+  {{- end }}
+
+  <div class="flex flex-col gap-16">
+    {{- range .RegularPages }}
+    <section aria-labelledby="album-{{ .File.ContentBaseName }}">
+      <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <h2 id="album-{{ .File.ContentBaseName }}" class="heading-section m-0">{{ .Title }}</h2>
+        <a href="{{ .RelPermalink }}" class="font-bold text-teal hover:underline">Album ansehen <span aria-hidden="true">→</span></a>
       </div>
+      {{- with .Content }}
+      <div class="prose-sise prose mb-6 max-w-[720px]">{{ . }}</div>
+      {{- end }}
+      {{ partial "galerie-bilder.html" .Params.photos }}
     </section>
     {{- end }}
   </div>

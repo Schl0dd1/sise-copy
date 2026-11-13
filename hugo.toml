@@ -1,79 +1,56 @@
 baseURL = "https://sichtbarundselbstbestimmt.org/"
 locale = "de"
+timeZone = "Europe/Berlin"
 defaultContentLanguage = "de"
 title = "Sichtbar & Selbstbestimmt"
 theme = "ananke"
 
+# Keine Tags/Kategorien
+disableKinds = ["taxonomy", "term"]
+
 [permalinks]
+  # Kontakt, Impressum, Datenschutz, „Weitere Seiten“ direkt unter /<dateiname>/
   pages = "/:contentbasename/"
-  projects = "/:slug/"
-  podcasts = "/podcasts/:slug/"
 
 [params]
   description = "Kollektive Auseinandersetzung mit sexualisierter Gewalt"
-  ShowReadingTime = false
-  ShowShareButtons = false
-  ShowPostNavLinks = true
-  mainSections = ["posts"]
 
 [menu]
-  # Gewichte in Zehnerschritten, damit im CMS angelegte Seiten
-  # (Feld "Position im Menü") dazwischen einsortiert werden können.
+  # Hauptmenü: ein Eintrag pro Bereich. „identifier“ = Ordnername in content/.
+  # Die Unterseiten (Dropdown) kommen automatisch aus dem jeweiligen Ordner,
+  # siehe layouts/_partials/main-menu.html.
+  # Gewichte in Zehnerschritten, damit „Weitere Seiten“ (Feld „Position im Menü“)
+  # dazwischen einsortiert werden können.
 
   [[menu.main]]
-    name = "Startseite"
-    url = "/"
+    name = "Über uns"
+    identifier = "ueber-uns"
+    url = "/ueber-uns/"
     weight = 10
 
   [[menu.main]]
-    name = "Aktuelles"
-    url = "/posts/"
+    name = "Veranstaltungen"
+    identifier = "veranstaltungen"
+    url = "/veranstaltungen/"
     weight = 20
 
   [[menu.main]]
     name = "Was wir machen"
     identifier = "was-wir-machen"
-    weight = 30
-    [menu.main.params]
-      hasChildren = true
-
-  [[menu.main]]
-    name = "Podcasts"
-    url = "/podcasts/"
-    parent = "was-wir-machen"
-    weight = 10
-
-  [[menu.main]]
-    name = "Workshops"
-    url = "/workshops/"
-    parent = "was-wir-machen"
-    weight = 20
-
-  [[menu.main]]
-    name = "Vorträge"
-    url = "/vortraege/"
-    parent = "was-wir-machen"
+    url = "/was-wir-machen/"
     weight = 30
 
   [[menu.main]]
-    name = "Materialien"
-    url = "/materialien/"
-    weight = 35
-
-  [[menu.main]]
-    name = "Links"
-    url = "/links/"
+    name = "Beiträge & kreative Aktionen"
+    identifier = "beitraege"
+    url = "/beitraege/"
     weight = 40
 
   [[menu.main]]
-    name = "Galerie"
-    url = "/gallery/"
+    name = "Links"
+    identifier = "links"
+    url = "/links/"
     weight = 50
-
-  [[menu.main]]
-    name = "Kontakt"
-    url = "/kontakt/"
-    weight = 60
 
 [build]
   [build.buildStats]
