@@ -1,5 +1,5 @@
 {{- /*
-  Hauptmenü: Einträge aus hugo.toml plus Seiten aus dem CMS (content/pages),
+  Hauptmenü: Einträge aus hugo.toml plus „Weitere Seiten“ aus dem CMS (content/pages, typ: weitere),
   bei denen "Im Menü anzeigen" gesetzt ist.
   Front-Matter der Seiten:
     menu_bereich:  "keins" | "hauptmenue" | "was-wir-machen"
@@ -8,7 +8,7 @@
 */ -}}
 {{- $extraMain := slice }}
 {{- $extraSub := slice }}
-{{- range where site.RegularPages "Section" "pages" }}
+{{- range where (where site.RegularPages "Section" "pages") "Params.typ" "weitere" }}
   {{- $entry := dict
     "name" (.Params.menu_name | default .Title)
     "url" .RelPermalink

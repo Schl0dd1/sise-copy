@@ -56,6 +56,11 @@ theme = "ananke"
     weight = 30
 
   [[menu.main]]
+    name = "Materialien"
+    url = "/materialien/"
+    weight = 35
+
+  [[menu.main]]
     name = "Links"
     url = "/links/"
     weight = 40

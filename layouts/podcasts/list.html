@@ -1,25 +1,48 @@
 {{ define "main" }}
 <div class="page-shell">
   <header class="page-header">
-    <h1 class="heading-1">Podcast</h1>
+    <h1 class="heading-1">{{ .Title | default "Podcast" }}</h1>
   </header>
 
-  <div class="podcast-grid">
-    {{- range .Pages }}
-    <article class="podcast-list-card">
-      {{- with .Params.cover }}
-      <img class="podcast-cover" src="{{ . }}" alt="">
-      {{- end }}
+  {{- with .Content }}
+  <div class="content">{{ . }}</div>
+  {{- end }}
 
-      <h2 class="heading-3">
-        <a class="page-list-link" href="{{ .RelPermalink }}">{{ .Title }}</a>
-      </h2>
+  {{- /* Alle Angaben kommen aus den einzelnen Folgen (content/podcasts/*.md) */}}
+  <div class="podcast-list">
+    {{- range .Pages.ByDate.Reverse }}
+    <article class="podcast-teaser" aria-labelledby="folge-{{ .File.ContentBaseName }}">
+      <div class="podcast-teaser-media">
+        {{- with .Params.cover }}
+        <img class="podcast-teaser-image" src="{{ . }}" alt="">
+        {{- else }}
+        <div class="podcast-teaser-image podcast-teaser-placeholder" aria-hidden="true"></div>
+        {{- end }}
+      </div>
 
-      {{- with .Params.duration }}
-      <p class="page-meta">Dauer: {{ . }}</p>
-      {{- end }}
+      <div class="podcast-teaser-body">
+        <h2 class="heading-3" id="folge-{{ .File.ContentBaseName }}">{{ .Title }}</h2>
 
-      <div class="content">{{ .Summary }}</div>
+        {{- with .Params.duration }}
+        <p class="page-meta">Dauer: {{ . }}</p>
+        {{- end }}
+
+        {{- with .Params.audio }}
+        <audio class="audio-player" controls preload="none" src="{{ . }}">
+          <a href="{{ . }}">Folge herunterladen</a>
+        </audio>
+        {{- end }}
+
+        <div class="content podcast-teaser-text">
+          {{- with .Params.teaser }}
+          <p>{{ . }}</p>
+          {{- else }}
+          <p>{{ .Summary | plainify | truncate 240 }}</p>
+          {{- end }}
+        </div>
+
+        <a class="btn-primary" href="{{ .RelPermalink }}">Mehr zur Folge</a>
+      </div>
     </article>
     {{- end }}
   </div>

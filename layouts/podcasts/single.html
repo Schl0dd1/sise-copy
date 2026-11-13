@@ -1,24 +1,32 @@
 {{ define "main" }}
-<article class="page-shell content">
+<article class="page-shell">
   <header class="page-header">
+    <p class="page-meta"><a class="page-list-link" href="{{ .Parent.RelPermalink }}">&larr; Alle Folgen</a></p>
     <h1 class="heading-1">{{ .Title }}</h1>
+    {{- with .Params.duration }}
+    <p class="page-meta">Dauer: {{ . }}</p>
+    {{- end }}
   </header>
 
-  {{ with .Params.cover }}
-  <img class="podcast-cover" src="{{ . }}" alt="">
-  {{ end }}
+  <div class="podcast-episode-intro">
+    {{- with .Params.cover }}
+    <img class="podcast-episode-image" src="{{ . }}" alt="">
+    {{- end }}
 
-  {{ with .Params.duration }}
-  <p class="page-meta">Dauer: {{ . }}</p>
-  {{ end }}
+    <div>
+      {{- with .Params.teaser }}
+      <p class="podcast-episode-teaser">{{ . }}</p>
+      {{- end }}
 
-  {{ with .Params.audio }}
-  <audio class="audio-player" controls>
-    <source src="{{ . }}" type="audio/mpeg">
-  </audio>
-  {{ end }}
+      {{- with .Params.audio }}
+      <audio class="audio-player" controls preload="metadata" src="{{ . }}">
+        <a href="{{ . }}">Folge herunterladen</a>
+      </audio>
+      {{- end }}
+    </div>
+  </div>
 
-  <div>
+  <div class="content">
     {{ .Content }}
   </div>
 </article>

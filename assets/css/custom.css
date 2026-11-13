@@ -711,31 +711,81 @@ section {
   text-transform: uppercase;
 }
 
-.podcast-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+.audio-player {
+  display: block;
+  width: 100%;
+  margin: 1.5rem 0;
 }
 
-.podcast-list-card {
+/* Podcast-Übersicht: Teaser untereinander, Bild links, Inhalt rechts */
+.podcast-list {
+  display: grid;
+  gap: 32px;
+  margin-top: 40px;
+}
+
+.podcast-teaser {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 32px;
   padding: 28px;
   border-left: 4px solid var(--highlight);
   background: var(--white);
 }
 
-.podcast-cover,
+.podcast-teaser-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.podcast-teaser-placeholder {
+  background: linear-gradient(135deg, var(--highlight), var(--primary));
+}
+
+.podcast-teaser-body .heading-3 {
+  margin: 0 0 8px;
+}
+
+.podcast-teaser-body .audio-player {
+  margin: 12px 0 16px;
+}
+
+.podcast-teaser-text p:last-child {
+  margin-bottom: 20px;
+}
+
+/* Podcast-Unterseite */
+.podcast-episode-intro {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+  margin-bottom: 40px;
+}
+
+.podcast-episode-intro:not(:has(.podcast-episode-image)) {
+  grid-template-columns: 1fr;
+}
+
+.podcast-episode-image,
 .gallery-image {
   display: block;
   width: 100%;
 }
 
-.podcast-cover {
-  margin-bottom: 20px;
+.podcast-episode-image {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
 }
 
-.audio-player {
-  width: 100%;
-  margin: 1.5rem 0;
+.podcast-episode-teaser {
+  margin: 0 0 16px;
+  color: var(--secondary);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .gallery-list {
@@ -801,6 +851,17 @@ section {
     .post-layout {
       grid-template-columns: 1fr;
     }
+
+  .podcast-teaser,
+  .podcast-episode-intro {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .podcast-teaser-image,
+  .podcast-episode-image {
+    max-width: 320px;
+  }
   }
 
 @media (max-width: 560px) {

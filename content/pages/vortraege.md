@@ -3,6 +3,7 @@ title: "Vorträge"
 slug: "vortraege"
 date: "2026-02-24T21:43:22+01:00"
 draft: false
+typ: "weitere"
 ---
 
 Wir halten Vorträge zu folgenden Themen:
